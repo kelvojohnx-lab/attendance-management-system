@@ -1,0 +1,144 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loska Attendance | Shift Management</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    body { margin: 0; }
+    header {
+      background: var(--navy);
+      color: white;
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    header h1 { color: white; font-size: 22px; }
+    .gold { color: #f0c342; }
+    main { max-width: 1050px; margin: 28px auto; padding: 0 18px; }
+    .panel {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px;
+      margin-bottom: 22px;
+      box-shadow: var(--shadow-sm);
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+    label { display: block; font-weight: 600; margin-bottom: 6px; }
+    input, select {
+      width: 100%;
+      padding: 11px;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      background: white;
+      color: var(--text);
+    }
+    select[multiple] { min-height: 130px; }
+    .field { margin-bottom: 16px; }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+    .secondary { background: var(--surface-muted); color: var(--text); }
+    .danger { background: var(--danger-bg); color: var(--danger); }
+    .shift-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      margin-top: 12px;
+    }
+    .shift-card h3 { margin-bottom: 8px; }
+    .status { font-weight: 700; }
+    #pageMessage {
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 18px;
+      display: none;
+      overflow-wrap: anywhere;
+    }
+    footer { text-align: center; padding: 25px; color: var(--text-secondary); }
+  </style>
+</head>
+<body>
+  <header>
+    <h1><span class="gold">LOSKA</span> Attendance</h1>
+    <div class="actions">
+      <a class="button" href="/dashboard.html">Dashboard</a>
+      <button id="logoutButton" type="button">Sign out</button>
+    </div>
+  </header>
+
+  <main>
+    <h2>Shift Management</h2>
+    <p class="muted">Configure shift times, assigned outlets and late-arrival grace periods.</p>
+
+    <div id="pageMessage" role="status"></div>
+
+    <section class="panel">
+      <h3 id="formTitle">Create a shift</h3>
+      <p class="muted">Select one or more active outlets. Hold Ctrl (Windows) to select multiple outlets.</p>
+
+      <form id="shiftForm">
+        <div class="field">
+          <label for="shiftName">Shift name</label>
+          <input id="shiftName" name="name" maxlength="80"
+            placeholder="e.g. Morning Shift" required>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="startTime">Start time</label>
+            <input id="startTime" name="startTime" type="time" required>
+          </div>
+
+          <div class="field">
+            <label for="endTime">End time</label>
+            <input id="endTime" name="endTime" type="time" required>
+          </div>
+
+          <div class="field">
+            <label for="gracePeriodMinutes">Grace period (minutes)</label>
+            <input id="gracePeriodMinutes" name="gracePeriodMinutes"
+              type="number" min="0" max="180" value="10" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="outletIds">Assigned outlets</label>
+          <select id="outletIds" name="outletIds" multiple required></select>
+        </div>
+
+        <p class="muted">
+          If a shift ends after midnight, its end time should be earlier than its start time.
+          The attendance logic will need to account for that when we implement schedules.
+        </p>
+
+        <div class="actions">
+          <button id="saveShiftButton" type="submit">Save shift</button>
+          <button id="cancelEditButton" type="button" class="secondary" hidden>
+            Cancel editing
+          </button>
+          <button id="refreshShiftsButton" type="button" class="secondary">
+            Refresh shifts
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <section class="panel">
+      <h3>Saved shifts</h3>
+      <div id="shiftList" aria-live="polite">Loading shifts...</div>
+    </section>
+  </main>
+
+  <footer>Loska Attendance &copy; 2026</footer>
+  <script type="module" src="/js/shifts.js"></script>
+</body>
+</html>

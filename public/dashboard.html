@@ -1,0 +1,78 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loska Attendance | Dashboard</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    body { margin: 0; background: #f5f6fa; color: #0f172a; font-family: Arial, sans-serif; }
+    header { background: #0f172a; color: white; padding: 18px 24px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+    header h1 { margin: 0; font-size: 22px; }
+    .gold { color: #f0c342; }
+    main { max-width: 1100px; margin: 28px auto; padding: 0 18px; }
+    .welcome { margin-bottom: 22px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; }
+    .card { background: white; border-radius: 12px; padding: 22px; box-shadow: 0 2px 10px #0000000d; }
+    .card h3 { margin-top: 0; font-size: 16px; }
+    .number { font-size: 28px; font-weight: bold; color: #b8860b; }
+    .section { margin-top: 22px; }
+    button, .button { background: #d4a017; color: #111827; border: 0; padding: 11px 16px; border-radius: 7px; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; }
+    button:hover, .button:hover { background: #f0c342; }
+    .muted { color: #64748b; line-height: 1.6; }
+    #message { padding: 12px; border-radius: 8px; background: #fff4cc; margin-bottom: 18px; display: none; }
+    footer { text-align: center; padding: 25px; color: #64748b; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1><span class="gold">LOSKA</span> Attendance</h1>
+    <button id="logoutButton" type="button">Sign out</button>
+  </header>
+
+  <main>
+    <div id="message" role="status"></div>
+    <section class="welcome">
+      <h2>Management Dashboard</h2>
+      <p class="muted">Welcome, <strong id="adminName">Administrator</strong>. Manage staff, outlets and attendance from one place.</p>
+    </section>
+
+    <section class="cards">
+      <article class="card">
+        <h3>Employee Approvals</h3>
+        <div class="number" id="pendingCount">—</div>
+        <p class="muted">Employees awaiting approval</p>
+        <button id="approvalsButton" type="button">Review approvals</button>
+      </article>
+      <article class="card">
+        <h3>Outlets</h3>
+        <div class="number">18</div>
+        <p class="muted">Planned outlet locations</p>
+        <button id="outletsButton" type="button">Manage outlets</button>
+      </article>
+      <article class="card">
+        <h3>Attendance</h3>
+        <div class="number">—</div>
+        <p class="muted">Review employee clock-ins and clock-outs</p>
+        <button id="attendanceButton" type="button">View attendance</button>
+      </article>
+    </section>
+
+    <section class="card section">
+      <h3>Getting started</h3>
+      <p class="muted">Your administrator account is ready. The next steps are to connect the management controls to secure server routes, configure your 18 outlet coordinates, and implement attendance reports.</p>
+      <p class="muted">Dashboard access alone does not mean those management features are implemented yet.</p>
+    </section>
+<section class="card section" id="approvalSection">
+  <h3>Pending Employee Registrations</h3>
+  <p class="muted">Review registrations and approve or reject employee access.</p>
+  <div id="approvalList">Loading pending registrations…</div>
+</section>
+  </main>
+
+
+  <footer>Loska Attendance &copy; 2026</footer>
+
+<script type="module" src="/js/admin.js"></script>
+</body>
+</html>

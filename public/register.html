@@ -1,0 +1,55 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Employee Registration | Loska Attendance</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <main class="registration-container">
+    <h1>Loska Attendance</h1>
+    <h2>Employee Registration</h2>
+    <p>Create your employee account. Management approval is required.</p>
+
+    <form id="registerForm">
+      <label for="name">Full name</label>
+      <input id="name" name="name" type="text"
+        autocomplete="name" required>
+
+      <label for="email">Email address</label>
+      <input id="email" name="email" type="email"
+        autocomplete="email" required>
+
+      <label for="phone">Phone number</label>
+      <input id="phone" name="phone" type="tel"
+        autocomplete="tel" required>
+
+      <label for="requestedOutletId">Preferred outlet</label>
+      <select id="requestedOutletId" name="requestedOutletId" required>
+      <option value="">Loading available outlets...</option>
+      </select>
+
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password"
+        autocomplete="new-password" minlength="8" required>
+
+      <label for="confirmPassword">Confirm password</label>
+      <input id="confirmPassword" name="confirmPassword"
+        type="password" autocomplete="new-password"
+        minlength="8" required>
+
+      <button type="submit" id="registerButton">
+        Create Account
+      </button>
+
+      <p id="message" role="status" aria-live="polite"></p>
+    </form>
+
+    <p>Already registered? <a href="/login.html">Sign in</a></p>
+  </main>
+
+  <script type="module" src="/js/register.js"></script>
+</body>
+</html>

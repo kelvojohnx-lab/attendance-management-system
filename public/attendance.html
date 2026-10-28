@@ -1,0 +1,77 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Attendance | Loska Attendance</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    .attendance-container { width: min(760px, 92%); margin: 35px auto; }
+    .attendance-header { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:24px; }
+    .attendance-card { background:var(--surface); padding:24px; border-radius:var(--radius-lg); box-shadow:var(--shadow); margin-bottom:20px; }
+    .attendance-card h2 { margin-bottom:16px; }
+    .attendance-form label { display:block; font-weight:600; margin:14px 0 6px; }
+    .attendance-form select { width:100%; padding:12px; border:1px solid var(--border); border-radius:var(--radius); background:white; }
+    .attendance-btn { border:0; border-radius:var(--radius); padding:12px 18px; font-weight:700; margin-top:16px; }
+    .attendance-primary { background:var(--primary); color:var(--navy); }
+    .attendance-danger { background:var(--danger); color:white; }
+    .attendance-muted { color:var(--text-secondary); }
+    .attendance-message { padding:12px; border-radius:var(--radius); margin:12px 0; overflow-wrap:anywhere; }
+    .attendance-hidden { display:none; }
+    .attendance-status { background:var(--primary-light); padding:14px; border-radius:var(--radius); }
+  </style>
+</head>
+<body>
+  <main class="attendance-container">
+    <header class="attendance-header">
+      <div>
+        <h1>My Attendance</h1>
+        <p class="attendance-muted">Loska Attendance</p>
+      </div>
+      <button id="logoutButton" class="attendance-btn attendance-primary" type="button">
+        Sign out
+      </button>
+    </header>
+
+    <div id="message" class="attendance-message attendance-hidden" role="status" aria-live="polite"></div>
+
+    <section class="attendance-card">
+      <h2>Attendance status</h2>
+      <div id="attendanceStatus" class="attendance-status">Loading your attendance...</div>
+      <p id="gpsStatus" class="attendance-muted" style="margin-top:12px">
+        Your location will be requested when you clock in or out.
+      </p>
+    </section>
+
+    <section id="clockInCard" class="attendance-card">
+      <h2>Clock in</h2>
+      <form id="clockInForm" class="attendance-form">
+        <label for="outletSelect">Assigned outlet</label>
+        <select id="outletSelect" required>
+          <option value="">Loading outlets...</option>
+        </select>
+
+        <label for="shiftSelect">Shift</label>
+        <select id="shiftSelect" required>
+          <option value="">Select an outlet first</option>
+        </select>
+
+        <button id="clockInButton" class="attendance-btn attendance-primary" type="submit">
+          Verify location and clock in
+        </button>
+      </form>
+    </section>
+
+    <section id="clockOutCard" class="attendance-card attendance-hidden">
+      <h2>Clock out</h2>
+      <p class="attendance-muted">You must be at the outlet where you clocked in.</p>
+      <button id="clockOutButton" class="attendance-btn attendance-danger" type="button">
+        Verify location and clock out
+      </button>
+    </section>
+  </main>
+
+  <script type="module" src="/js/attendance.js"></script>
+</body>
+</html>

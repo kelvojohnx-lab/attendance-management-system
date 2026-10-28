@@ -1,0 +1,266 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attendance Records | Loska Attendance</title>
+  <style>
+    :root {
+      --gold: #eab308;
+      --gold-dark: #795700;
+      --bg: #f8fafc;
+      --border: #e2e8f0;
+      --text: #1e293b;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    header {
+      background: #fff;
+      padding: 18px 24px;
+      border-bottom: 3px solid var(--gold);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    header h1 { margin: 0; font-size: 22px; }
+
+    main {
+      max-width: 1400px;
+      margin: 24px auto;
+      padding: 0 18px;
+    }
+
+    .panel {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .filters {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 14px;
+      align-items: end;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 11px;
+      border: 1px solid #cbd5e1;
+      border-radius: 7px;
+      font: inherit;
+    }
+
+    button {
+      background: var(--gold);
+      border: none;
+      color: #422006;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button:hover { filter: brightness(.96); }
+
+    button.secondary {
+      background: #f1f5f9;
+      color: #1e293b;
+      border: 1px solid var(--border);
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    .actions button { width: auto; }
+
+    #message {
+      display: none;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      overflow-wrap: anywhere;
+    }
+
+    .summary {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .stat {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      min-width: 160px;
+      flex: 1;
+    }
+
+    .stat span {
+      display: block;
+      font-size: 13px;
+      color: #64748b;
+      margin-bottom: 8px;
+    }
+
+    .stat strong { font-size: 24px; }
+
+    .table-wrap {
+      overflow-x: auto;
+      width: 100%;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      min-width: 950px;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    th { background: #fffbeb; }
+
+    .status {
+      display: inline-block;
+      padding: 5px 8px;
+      border-radius: 20px;
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .status.open {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .muted { color: #64748b; }
+
+    @media (max-width: 600px) {
+      header { padding: 16px; }
+      main { padding: 0 10px; margin-top: 14px; }
+      .panel { padding: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Loska Attendance — Records</h1>
+    <button id="backButton" class="secondary" style="width:auto">
+      Back to Dashboard
+    </button>
+  </header>
+
+  <main>
+    <div id="message" role="status" aria-live="polite"></div>
+
+    <section class="panel">
+      <h2>Filter attendance</h2>
+
+      <div class="filters">
+        <div>
+          <label for="dateFrom">From date</label>
+          <input type="date" id="dateFrom">
+        </div>
+
+        <div>
+          <label for="dateTo">To date</label>
+          <input type="date" id="dateTo">
+        </div>
+
+        <div>
+          <label for="outletFilter">Outlet</label>
+          <select id="outletFilter">
+            <option value="">All outlets</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="employeeFilter">Employee</label>
+          <select id="employeeFilter">
+            <option value="">All employees</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="applyFilters">Apply filters</button>
+        <button id="resetFilters" class="secondary">Reset</button>
+        <button id="exportCsv">Export CSV</button>
+        <button id="refreshRecords" class="secondary">Refresh</button>
+      </div>
+    </section>
+
+    <section class="summary">
+      <div class="stat">
+        <span>Records shown</span>
+        <strong id="recordCount">0</strong>
+      </div>
+      <div class="stat">
+        <span>Currently clocked in</span>
+        <strong id="openCount">0</strong>
+      </div>
+      <div class="stat">
+        <span>Clocked out</span>
+        <strong id="closedCount">0</strong>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Attendance history</h2>
+      <p class="muted" id="tableInfo">Loading attendance records…</p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Employee</th>
+              <th>Outlet</th>
+              <th>Shift</th>
+              <th>Clock in</th>
+              <th>Clock out</th>
+              <th>Duration</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="recordsBody">
+            <tr><td colspan="7">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="/js/attendance-records.js"></script>
+</body>
+</html>

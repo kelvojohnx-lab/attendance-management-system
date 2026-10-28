@@ -1,0 +1,61 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0F172A">
+  <title>Sign In | Loska Attendance</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <main class="auth-container">
+    <div class="auth-logo">
+      <span class="brand-mark">L</span>
+    </div>
+
+    <h1 class="text-center">Loska Attendance</h1>
+    <h2 class="text-center">Welcome back</h2>
+    <p class="text-center">Sign in to your employee account.</p>
+
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="email">Email address</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="you@example.com"
+          autocomplete="email"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Enter your password"
+          autocomplete="current-password"
+          required
+        >
+      </div>
+
+      <button type="submit" id="loginButton" class="btn-block">
+        Sign In
+      </button>
+
+      <p id="message" role="status" aria-live="polite"></p>
+    </form>
+
+    <p class="auth-footer">
+      Don't have an account?
+      <a href="/register.html">Register here</a>
+    </p>
+  </main>
+
+  <script type="module" src="/js/login.js"></script>
+</body>
+</html>

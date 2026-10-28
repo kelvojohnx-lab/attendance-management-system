@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Manage Outlets | Loska Attendance</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    body { margin: 0; background: #f5f6fa; color: #0f172a; font-family: Arial, sans-serif; }
+    header { background: #0f172a; color: white; padding: 18px 24px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    header h1 { font-size: 21px; margin: 0; }
+    .gold { color: #f0c342; }
+    main { max-width: 1100px; margin: 25px auto; padding: 0 16px; }
+    .panel { background: white; border-radius: 12px; padding: 22px; margin-bottom: 20px; box-shadow: 0 2px 10px #0000000d; }
+    .panel h2 { margin-top: 0; }
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; }
+    label { display: block; font-weight: 600; font-size: 14px; margin-bottom: 6px; }
+    input { width: 100%; box-sizing: border-box; padding: 11px; border: 1px solid #cbd5e1; border-radius: 7px; font-size: 15px; }
+    button, .button { border: 0; border-radius: 7px; padding: 11px 15px; background: #d4a017; color: #111827; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-block; }
+    button:hover, .button:hover { background: #f0c342; }
+    button.secondary { background: #e2e8f0; }
+    button.danger { background: #fee2e2; color: #991b1b; }
+    .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px; }
+    .muted { color: #64748b; line-height: 1.5; }
+    #notice { display: none; margin-bottom: 18px; padding: 12px; border-radius: 8px; overflow-wrap: anywhere; }
+    #outletList { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 15px; }
+    .outlet-card { border: 1px solid #e2e8f0; border-radius: 10px; padding: 17px; min-width: 0; }
+    .outlet-card h3 { margin: 0 0 8px; overflow-wrap: anywhere; }
+    .outlet-card p { overflow-wrap: anywhere; }
+    .status { font-size: 12px; font-weight: bold; padding: 4px 8px; border-radius: 20px; background: #dcfce7; color: #166534; }
+    .status.inactive { background: #fee2e2; color: #991b1b; }
+    .top-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    footer { text-align: center; padding: 20px; color: #64748b; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1><span class="gold">LOSKA</span> Attendance · Outlets</h1>
+    <div class="top-actions">
+      <a class="button" href="/dashboard.html">Dashboard</a>
+      <button id="logoutButton" type="button" class="secondary">Sign out</button>
+    </div>
+  </header>
+
+  <main>
+    <div id="notice" role="status"></div>
+
+    <section class="panel">
+      <h2>Register a new outlet</h2>
+      <p class="muted">Enter the outlet's real GPS coordinates. Each new outlet will use a 100-metre attendance radius.</p>
+
+      <form id="outletForm">
+        <div class="form-grid">
+          <div>
+            <label for="outletName">Outlet name</label>
+            <input id="outletName" maxlength="100" required placeholder="e.g. Loska Nairobi CBD">
+          </div>
+          <div>
+            <label for="outletAddress">Address or location description</label>
+            <input id="outletAddress" maxlength="250" placeholder="e.g. Nairobi CBD">
+          </div>
+          <div>
+            <label for="latitude">Latitude</label>
+            <input id="latitude" type="number" min="-90" max="90" step="any" required placeholder="-1.286389">
+          </div>
+          <div>
+            <label for="longitude">Longitude</label>
+            <input id="longitude" type="number" min="-180" max="180" step="any" required placeholder="36.817223">
+          </div>
+        </div>
+        <div class="actions">
+          <button type="submit" id="createButton">Save outlet</button>
+          <button type="button" id="locationButton" class="secondary">Use my current GPS</button>
+        </div>
+        <p class="muted">Only use your current GPS when you are physically at the outlet. Otherwise, enter its verified coordinates.</p>
+      </form>
+    </section>
+
+    <section class="panel">
+      <h2>Registered outlets <span id="outletCount">(0)</span></h2>
+      <p class="muted">Review outlet locations and activate or deactivate an outlet.</p>
+      <div class="actions">
+        <button id="refreshButton" type="button" class="secondary">Refresh list</button>
+      </div>
+      <div id="outletList" style="margin-top: 18px;">Loading outlets…</div>
+    </section>
+
+<section class="panel">
+  <h2>Employee Outlet Assignments</h2>
+  <p class="muted">
+    Assign approved employees to one or more active outlets.
+    Employees can only clock in at outlets to which they are assigned.
+  </p>
+
+  <div>
+    <label for="assignmentOutlet">Select outlet</label>
+    <select id="assignmentOutlet"
+      style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #cbd5e1;border-radius:7px;">
+      <option value="">Loading outlets...</option>
+    </select>
+  </div>
+
+  <div class="actions">
+    <button id="refreshAssignmentsButton" type="button" class="secondary">
+      Refresh employees
+    </button>
+  </div>
+
+  <div id="assignmentMessage" role="status" class="muted"
+    style="margin-top:12px;"></div>
+
+  <div id="employeeAssignmentList" style="margin-top:18px;">
+    Select an outlet to view employees.
+  </div>
+</section>
+
+  </main>
+
+  <footer>Loska Attendance · Management</footer>
+
+  <script type="module" src="/js/outlets.js"></script>
+</body>
+</html>

@@ -7,6 +7,38 @@ const {
 } = require("./geolocation.service");
 
 const ATTENDANCE_COLLECTION = "attendance";
+function calculateArrivalStatus(startTime, gracePeriodMinutes = 6) {
+  if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(startTime || "")) {
+    throw new Error("The shift start time is invalid.");
+  }
+
+  const nairobiTime = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Africa/Nairobi",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23"
+  }).format(new Date());
+
+  const [currentHour, currentMinute] = nairobiTime.split(":").map(Number);
+  const [startHour, startMinute] = startTime.split(":").map(Number);
+
+  const currentMinutes = currentHour * 60 + currentMinute;
+  const startMinutes = startHour * 60 + startMinute;
+
+  const minutesLate = currentMinutes - startMinutes;
+
+  if (minutesLate <= gracePeriodMinutes) {
+    return {
+      arrivalStatus: "on_time",
+      minutesLate: 0
+    };
+  }
+
+  return {
+    arrivalStatus: "late",
+    minutesLate
+  };
+}
 
 function fail(message, statusCode = 400) {
   const error = new Error(message);
@@ -145,6 +177,10 @@ async function clockIn({ employee, outletId, shiftId, location }) {
     if (!openSnapshot.empty) {
       fail("You already have an open attendance session.", 409);
     }
+    const arrival = calculateArrivalStatus(
+     shift.startTime,
+     shift.gracePeriodMinutes ?? 6
+  );
 
     const now = FieldValue.serverTimestamp();
 
@@ -155,6 +191,8 @@ async function clockIn({ employee, outletId, shiftId, location }) {
       outletName: outlet.name || "",
       shiftId,
       shiftName: shift.name || "",
+      arrivalStatus: arrival.arrivalStatus,
+      minutesLate: arrival.minutesLate,
       clockInAt: now,
       clockInLocation: {
         latitude: location.latitude,

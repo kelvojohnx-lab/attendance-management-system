@@ -1,0 +1,201 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Leave | Loska Attendance</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    .leave-container {
+      width: min(950px, 94%);
+      margin: 32px auto;
+    }
+
+    .leave-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .leave-card {
+      background: var(--surface);
+      padding: 24px;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+
+    .leave-card h2 {
+      margin-bottom: 16px;
+    }
+
+    .leave-balance {
+      font-size: 34px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .leave-muted {
+      color: var(--text-secondary);
+    }
+
+    .leave-form label {
+      display: block;
+      font-weight: 600;
+      margin: 14px 0 6px;
+    }
+
+    .leave-form input,
+    .leave-form textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font: inherit;
+      box-sizing: border-box;
+    }
+
+    .leave-form textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    .leave-button {
+      border: 0;
+      border-radius: var(--radius);
+      padding: 12px 18px;
+      font-weight: 700;
+      margin-top: 16px;
+      cursor: pointer;
+    }
+
+    .leave-primary {
+      background: var(--primary);
+      color: var(--navy);
+    }
+
+    .leave-message {
+      padding: 12px;
+      border-radius: var(--radius);
+      margin: 12px 0;
+      overflow-wrap: anywhere;
+    }
+
+    .leave-hidden {
+      display: none;
+    }
+
+    .leave-table-wrap {
+      overflow-x: auto;
+    }
+
+    .leave-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 600px;
+    }
+
+    .leave-table th,
+    .leave-table td {
+      text-align: left;
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .leave-status {
+      font-weight: 700;
+      text-transform: capitalize;
+    }
+
+    @media (max-width: 600px) {
+      .leave-card {
+        padding: 17px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="leave-container">
+    <header class="leave-header">
+      <div>
+        <h1>My Annual Leave</h1>
+        <p class="leave-muted">Loska Attendance</p>
+      </div>
+
+      <div>
+        <a href="/attendance.html" class="leave-button leave-primary">
+          Back to Attendance
+        </a>
+        <button id="logoutButton" class="leave-button leave-primary" type="button">
+          Sign out
+        </button>
+      </div>
+    </header>
+
+    <div id="message" class="leave-message leave-hidden"
+         role="status" aria-live="polite"></div>
+
+    <section class="leave-card">
+      <h2>My Leave Balance</h2>
+      <div id="availableBalance" class="leave-balance">Loading...</div>
+      <p class="leave-muted">Available annual leave days</p>
+      <p class="leave-muted" id="balanceDetails"></p>
+    </section>
+
+    <section class="leave-card">
+      <h2>Apply for Leave</h2>
+      <p class="leave-muted">
+        Leave is counted in calendar days, including weekends and public holidays.
+        Applications require management approval.
+      </p>
+
+      <form id="leaveForm" class="leave-form">
+        <label for="startDate">First day of leave</label>
+        <input type="date" id="startDate" required>
+
+        <label for="endDate">Last day of leave</label>
+        <input type="date" id="endDate" required>
+
+        <label for="reason">Reason for leave</label>
+        <textarea id="reason" maxlength="1000"
+                  placeholder="Enter your reason for requesting leave..."
+                  required></textarea>
+
+        <button id="submitButton" class="leave-button leave-primary"
+                type="submit">
+          Submit Leave Application
+        </button>
+      </form>
+    </section>
+
+    <section class="leave-card">
+      <h2>My Leave Applications</h2>
+      <div class="leave-table-wrap">
+        <table class="leave-table">
+          <thead>
+            <tr>
+              <th>Start date</th>
+              <th>End date</th>
+              <th>Days</th>
+              <th>Reason</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="applicationList">
+            <tr>
+              <td colspan="5">Loading applications...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="/js/leave-application.js"></script>
+</body>
+</html>
+```

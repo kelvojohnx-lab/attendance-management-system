@@ -882,6 +882,21 @@ tbody tr:last-child td {
   color: #92400E;
   background: var(--warning-bg);
 }
+/* Attendance arrival status labels */
+.status.on-time {
+  color: #166534;
+  background: #DCFCE7;
+}
+
+.status.late {
+  color: #991B1B;
+  background: #FEE2E2;
+}
+
+.status.unknown {
+  color: #374151;
+  background: #E5E7EB;
+}
 
 /* =====================================================
    FILTERS AND SEARCH
@@ -1203,4 +1218,37 @@ tbody tr:last-child td {
   .button {
     padding: 10px 13px;
   }
+}
+
+/* Password visibility controls */
+.password-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.password-field input {
+  width: 100%;
+  padding-right: 48px;
+  box-sizing: border-box;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  padding: 6px;
+  cursor: pointer;
+  font-size: 19px;
+  color: #555;
+  line-height: 1;
+}
+
+.password-toggle:hover {
+  color: #d4a017;
 }

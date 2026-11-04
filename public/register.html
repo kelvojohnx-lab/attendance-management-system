@@ -28,17 +28,29 @@
 
       <label for="requestedOutletId">Preferred outlet</label>
       <select id="requestedOutletId" name="requestedOutletId" required>
-      <option value="">Loading available outlets...</option>
+        <option value="">Loading available outlets...</option>
       </select>
 
       <label for="password">Password</label>
-      <input id="password" name="password" type="password"
-        autocomplete="new-password" minlength="8" required>
+      <div class="password-field">
+        <input id="password" name="password" type="password"
+          autocomplete="new-password" minlength="8" required>
+        <button type="button" class="password-toggle"
+          data-password-toggle="password"
+          aria-label="Show password"
+          aria-pressed="false">👁</button>
+      </div>
 
       <label for="confirmPassword">Confirm password</label>
-      <input id="confirmPassword" name="confirmPassword"
-        type="password" autocomplete="new-password"
-        minlength="8" required>
+      <div class="password-field">
+        <input id="confirmPassword" name="confirmPassword"
+          type="password" autocomplete="new-password"
+          minlength="8" required>
+        <button type="button" class="password-toggle"
+          data-password-toggle="confirmPassword"
+          aria-label="Show confirm password"
+          aria-pressed="false">👁</button>
+      </div>
 
       <button type="submit" id="registerButton">
         Create Account
@@ -50,6 +62,7 @@
     <p>Already registered? <a href="/login.html">Sign in</a></p>
   </main>
 
+  <script src="/js/password-toggle.js" defer></script>
   <script type="module" src="/js/register.js"></script>
 </body>
 </html>

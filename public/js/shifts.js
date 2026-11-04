@@ -138,7 +138,7 @@ function renderShifts() {
     addText(
       card,
       "p",
-      `Grace period: ${shift.gracePeriodMinutes ?? 10} minutes`
+      `Grace period: ${shift.gracePeriodMinutes ?? 6} minutes`
     );
 
     const names = getOutletNames(shift.outletIds || []);
@@ -190,7 +190,7 @@ function beginEdit(id) {
   form.elements.startTime.value = shift.startTime || "";
   form.elements.endTime.value = shift.endTime || "";
   form.elements.gracePeriodMinutes.value =
-    shift.gracePeriodMinutes ?? 10;
+    shift.gracePeriodMinutes ?? 6;
 
   const selectedIds = new Set(shift.outletIds || []);
 
@@ -208,7 +208,7 @@ function beginEdit(id) {
 function resetForm() {
   editingShiftId = null;
   form.reset();
-  form.elements.gracePeriodMinutes.value = 10;
+  form.elements.gracePeriodMinutes.value = 6;
 
   for (const option of outletSelect.options) {
     option.selected = false;

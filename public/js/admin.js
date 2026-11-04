@@ -93,17 +93,53 @@ async function loadPendingEmployees() {
   }
 }
 
+
 async function updateEmployee(uid, action) {
   const verb = action === "approve" ? "approve" : "reject";
+  let requestOptions = { method: "PATCH" };
 
-  if (!window.confirm(`Are you sure you want to ${verb} this employee?`)) {
+  if (action === "approve") {
+    const employmentStartDate = window.prompt(
+      "Enter the employee's actual employment start date (YYYY-MM-DD):"
+    );
+
+    if (employmentStartDate === null) {
+      return;
+    }
+
+    const parsedDate = new Date(`${employmentStartDate}T00:00:00Z`);
+
+    if (
+      !/^\d{4}-\d{2}-\d{2}$/.test(employmentStartDate) ||
+      Number.isNaN(parsedDate.getTime()) ||
+      parsedDate.toISOString().slice(0, 10) !== employmentStartDate
+    ) {
+      showMessage("Please enter a valid date in YYYY-MM-DD format.", true);
+      return;
+    }
+
+    requestOptions.body = JSON.stringify({
+      employmentStartDate
+    });
+  } else {
+    if (!window.confirm("Are you sure you want to reject this employee?")) {
+      return;
+    }
+  }
+
+  if (
+    action === "approve" &&
+    !window.confirm(
+      `Approve this employee with employment start date ${requestOptions.body ? JSON.parse(requestOptions.body).employmentStartDate : ""}?`
+    )
+  ) {
     return;
   }
 
   try {
     const result = await apiRequest(
       `/api/admin/employees/${encodeURIComponent(uid)}/${action}`,
-      { method: "PATCH" }
+      requestOptions
     );
 
     showMessage(result.message);
@@ -112,6 +148,7 @@ async function updateEmployee(uid, action) {
     showMessage(error.message, true);
   }
 }
+
 
 onAuthStateChanged(auth, async user => {
   if (!user) {

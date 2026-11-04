@@ -1,0 +1,164 @@
+ 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leave Management | Loska Attendance</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <style>
+    body {
+      margin: 0;
+      background: #f5f6fa;
+      color: #0f172a;
+      font-family: Arial, sans-serif;
+    }
+    header {
+      background: #0f172a;
+      color: white;
+      padding: 18px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    header h1 { margin: 0; font-size: 22px; }
+    .gold { color: #f0c342; }
+    main { max-width: 1100px; margin: 28px auto; padding: 0 18px; }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 22px;
+      margin-bottom: 18px;
+      box-shadow: 0 2px 10px #0000000d;
+    }
+    .muted { color: #64748b; line-height: 1.6; }
+    button, .button {
+      background: #d4a017;
+      color: #111827;
+      border: 0;
+      padding: 11px 16px;
+      border-radius: 7px;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+    button:hover, .button:hover { background: #f0c342; }
+    button:disabled { opacity: .6; cursor: not-allowed; }
+    .reject-button {
+      background: #fee2e2;
+      color: #991b1b;
+      margin-left: 5px;
+    }
+    .reject-button:hover { background: #fecaca; }
+    #message {
+      display: none;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 18px;
+    }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 650px; }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #e2e8f0;
+      vertical-align: top;
+    }
+    th { background: #f8fafc; }
+    input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+    }
+    .balance-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      gap: 8px;
+      min-width: 390px;
+    }
+    .status-set { color: #15803d; font-weight: bold; }
+    .status-missing { color: #b45309; font-weight: bold; }
+    .application-reason {
+      max-width: 220px;
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+    @media (max-width: 650px) {
+      main { padding: 0 12px; }
+      .card { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1><span class="gold">LOSKA</span> Attendance</h1>
+    <a class="button" href="/dashboard.html">Dashboard</a>
+  </header>
+
+  <main>
+    <h2>Annual Leave Management</h2>
+    <p class="muted">
+      Review employee leave applications and manage annual leave balances.
+    </p>
+
+    <div id="message" role="status"></div>
+
+    <section class="card">
+      <h3>Pending Leave Applications</h3>
+      <p class="muted">
+        Review each application before approving or rejecting it.
+      </p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Employee</th>
+              <th>Leave dates</th>
+              <th>Days</th>
+              <th>Reason</th>
+              <th>Submitted</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="pendingLeaveList">
+            <tr><td colspan="6">Loading applications...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>Employee Opening Balances</h3>
+      <p class="muted">
+        Each existing employee can receive an opening balance only once.
+        Check the balance and effective date carefully before saving.
+      </p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Employee</th>
+              <th>Email</th>
+              <th>Opening balance (days)</th>
+              <th>Balance as of</th>
+              <th>Action / Status</th>
+            </tr>
+          </thead>
+          <tbody id="employeeList">
+            <tr><td colspan="5">Loading employees...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="/js/leave-management.js"></script>
+</body>
+</html>

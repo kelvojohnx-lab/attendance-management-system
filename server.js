@@ -1,5 +1,6 @@
-const { auth, db } = require("./config/firebase");
 require("dotenv").config();
+
+const { auth, db } = require("./config/firebase");
 
 const express = require("express");
 const helmet = require("helmet");
@@ -9,6 +10,7 @@ const adminRoutes = require("./routes/admin.routes");
 const outletRoutes = require("./routes/outlet.routes");
 const shiftRoutes = require("./routes/shift.routes");
 const attendanceRoutes = require("./routes/attendance.routes");
+const leaveRoutes = require("./routes/leave.routes");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -46,6 +48,7 @@ app.use(express.json({ limit: "20kb" }));
 app.use(express.urlencoded({ extended: false }));
 
 app.use("/api/attendance", attendanceRoutes);
+app.use("/api/leave", leaveRoutes);
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/api/outlets", outletRoutes);
 app.use("/api/shifts", shiftRoutes);
@@ -64,7 +67,8 @@ app.get("/api", (req, res) => {
     environment: process.env.NODE_ENV || "development"
   });
 });
-app.get("/api/firebase-check", async (req, res) => {
+if (process.env.NODE_ENV !== "production") {
+  app.get("/api/firebase-check", async (req, res) => {
   try {
     await auth.listUsers(1);
     await db.listCollections();
@@ -82,6 +86,7 @@ app.get("/api/firebase-check", async (req, res) => {
     });
   }
 });
+}
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
 const HOST = "0.0.0.0";

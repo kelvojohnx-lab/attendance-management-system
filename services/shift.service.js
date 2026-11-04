@@ -21,7 +21,7 @@ function validateShift(input) {
     errors.push("End time must use HH:mm format.");
   }
 
-  const grace = input.gracePeriodMinutes ?? 10;
+  const grace = input.gracePeriodMinutes ?? 6;
 
   if (!Number.isInteger(grace) || grace < 0 || grace > 180) {
     errors.push("Grace period must be between 0 and 180 minutes.");
@@ -85,7 +85,7 @@ async function createShift(input, adminUid) {
     name: input.name.trim(),
     startTime: input.startTime,
     endTime: input.endTime,
-    gracePeriodMinutes: input.gracePeriodMinutes ?? 10,
+    gracePeriodMinutes: input.gracePeriodMinutes ?? 6,
     outletIds,
     active: true,
     createdAt: now,
@@ -136,7 +136,7 @@ async function updateShift(id, input, adminUid) {
     name: input.name.trim(),
     startTime: input.startTime,
     endTime: input.endTime,
-    gracePeriodMinutes: input.gracePeriodMinutes ?? 10,
+    gracePeriodMinutes: input.gracePeriodMinutes ?? 6,
     outletIds,
     updatedAt: new Date(),
     updatedBy: adminUid

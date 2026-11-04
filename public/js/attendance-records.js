@@ -16,8 +16,6 @@ const tableInfo = document.getElementById("tableInfo");
 
 let allRecords = [];
 let currentRecords = [];
-let outletsLoaded = false;
-let employeesLoaded = false;
 
 function showMessage(text, isError = false) {
   message.textContent = text;
@@ -94,6 +92,31 @@ function durationBetween(startValue, endValue) {
   return `${hours}h ${minutes}m`;
 }
 
+function getArrivalLabel(record) {
+  if (record.arrivalStatus === "late") {
+    const minutes = Number.isFinite(record.minutesLate)
+      ? record.minutesLate
+      : 0;
+
+    return {
+      label: `LATE (${minutes} min)`,
+      className: "late"
+    };
+  }
+
+  if (record.arrivalStatus === "on_time") {
+    return {
+      label: "ON TIME",
+      className: "on-time"
+    };
+  }
+
+  return {
+    label: "UNKNOWN",
+    className: "unknown"
+  };
+}
+
 function populateSelect(selectId, values, firstLabel) {
   const select = document.getElementById(selectId);
   const previousValue = select.value;
@@ -135,9 +158,6 @@ async function loadFilterOptions() {
     })).filter(item => item.value),
     "All employees"
   );
-
-  outletsLoaded = true;
-  employeesLoaded = true;
 }
 
 function getFilteredRecords() {
@@ -150,7 +170,6 @@ function getFilteredRecords() {
     if (outletId && record.outletId !== outletId) return false;
     if (employeeUid && record.employeeUid !== employeeUid) return false;
 
-    // The server currently filters dates using UTC calendar dates.
     const clockInDate = record.clockInAt
       ? record.clockInAt.slice(0, 10)
       : "";
@@ -166,32 +185,44 @@ function renderRecords(records) {
   currentRecords = records;
 
   document.getElementById("recordCount").textContent = records.length;
+
   document.getElementById("openCount").textContent =
     records.filter(record => record.status === "clocked_in").length;
+
   document.getElementById("closedCount").textContent =
     records.filter(record => record.status === "clocked_out").length;
 
   if (!records.length) {
     recordsBody.innerHTML =
-      '<tr><td colspan="7">No attendance records match these filters.</td></tr>';
+      '<tr><td colspan="8">No attendance records match these filters.</td></tr>';
+
     tableInfo.textContent = "No matching records.";
     return;
   }
 
   recordsBody.innerHTML = records.map(record => {
     const isOpen = record.status === "clocked_in";
+    const arrival = getArrivalLabel(record);
 
     return `
       <tr>
         <td>${escapeHtml(record.employeeName || "Unknown employee")}</td>
         <td>${escapeHtml(record.outletName || "Unknown outlet")}</td>
         <td>${escapeHtml(record.shiftName || "—")}</td>
+
+        <td>
+          <span class="status ${arrival.className}">
+            ${escapeHtml(arrival.label)}
+          </span>
+        </td>
+
         <td>${escapeHtml(formatDate(record.clockInAt))}</td>
         <td>${escapeHtml(formatDate(record.clockOutAt))}</td>
         <td>${escapeHtml(durationBetween(record.clockInAt, record.clockOutAt))}</td>
+
         <td>
           <span class="status ${isOpen ? "open" : ""}">
-            ${isOpen ? "Clocked in" : escapeHtml(record.status)}
+            ${isOpen ? "Clocked in" : escapeHtml(record.status || "Unknown")}
           </span>
         </td>
       </tr>
@@ -204,10 +235,12 @@ function renderRecords(records) {
 
 async function loadRecords() {
   recordsBody.innerHTML =
-    '<tr><td colspan="7">Loading attendance records…</td></tr>';
+    '<tr><td colspan="8">Loading attendance records…</td></tr>';
+
   tableInfo.textContent = "Loading…";
 
   const result = await apiRequest("/api/admin/attendance-records");
+
   allRecords = result.records || [];
   renderRecords(getFilteredRecords());
 }
@@ -223,6 +256,8 @@ function exportCsv() {
     ["Employee UID", record => record.employeeUid],
     ["Outlet", record => record.outletName],
     ["Shift", record => record.shiftName],
+    ["Arrival", record => getArrivalLabel(record).label],
+    ["Minutes Late", record => record.minutesLate ?? 0],
     ["Clock In", record => record.clockInAt ? formatDate(record.clockInAt) : ""],
     ["Clock Out", record => record.clockOutAt ? formatDate(record.clockOutAt) : ""],
     ["Duration", record => durationBetween(record.clockInAt, record.clockOutAt)],
@@ -232,7 +267,6 @@ function exportCsv() {
   const csvCell = value => {
     let text = String(value ?? "");
 
-    // Prevent spreadsheet formula injection.
     if (/^[\s]*[=+\-@]/.test(text)) {
       text = "'" + text;
     }
@@ -253,8 +287,10 @@ function exportCsv() {
 
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
+
   link.href = url;
   link.download = `loska-attendance-${new Date().toISOString().slice(0, 10)}.csv`;
+
   link.click();
   URL.revokeObjectURL(url);
 }
@@ -272,6 +308,7 @@ document.getElementById("resetFilters").addEventListener("click", () => {
   document.getElementById("dateTo").value = "";
   document.getElementById("outletFilter").value = "";
   document.getElementById("employeeFilter").value = "";
+
   renderRecords(getFilteredRecords());
 });
 
@@ -306,7 +343,8 @@ onAuthStateChanged(auth, async user => {
   } catch (error) {
     showMessage(error.message, true);
     tableInfo.textContent = "Could not load attendance records.";
+
     recordsBody.innerHTML =
-      '<tr><td colspan="7">Please check the server and try refreshing.</td></tr>';
+      '<tr><td colspan="8">Please check the server and try refreshing.</td></tr>';
   }
 });

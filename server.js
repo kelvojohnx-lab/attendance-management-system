@@ -55,14 +55,14 @@ app.use("/api/shifts", shiftRoutes);
 app.get("/api/health", (req, res) => {
   res.json({
     success: true,
-    message: "Loska Attendance API is running",
+    message: "Attendance Management System API is running",
     timestamp: new Date().toISOString()
   });
 });
 
 app.get("/api", (req, res) => {
   res.json({
-    name: "Loska Attendance",
+    name: "Attendance Management System",
     version: "1.0.0",
     environment: process.env.NODE_ENV || "development"
   });
@@ -92,6 +92,6 @@ app.use("/api/admin", adminRoutes);
 const HOST = "0.0.0.0";
 
 app.listen(PORT, HOST, () => {
-  console.log(`Loska Attendance running locally at http://localhost:${PORT}`);
+  console.log(`Attendance Management System running locally at http://localhost:${PORT}`);
   console.log(`For other devices, use your computer's IPv4 address on port ${PORT}`);
 });
